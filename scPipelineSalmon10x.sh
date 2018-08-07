@@ -31,9 +31,9 @@ fi
 
 
 #aliases and dependences
-alias umi_tools='/storage1/local/python/python-3.6.5/bin/umi_tools'
-alias salmon='/storage1/downloads/salmon-0.11.1-linux_x86_64/bin/salmon'
-alias createMatrix='/storage1/scripts/scRNAseq/scCustomPipeline02_salmon/10x/createMatrix.rscript'
+UMITOOLS='/storage1/local/python/python-3.6.5/bin/umi_tools'
+SALMON='/storage1/downloads/salmon-0.11.1-linux_x86_64/bin/salmon'
+CREATEMATRIX='/storage1/scripts/scRNAseq/scCustomPipeline02_salmon/10x/createMatrix.rscript'
 
 #VARS
 READ1=$1
@@ -65,18 +65,18 @@ fi
 
 echo "identifying valid cell barcodes..."
 
-umi_tools whitelist --stdin ${READ1} --bc-pattern=CCCCCCCCCCCCCCCCNNNNNNNNNN --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=plots/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
+${UMITOOLS} whitelist --stdin ${READ1} --bc-pattern=CCCCCCCCCCCCCCCCNNNNNNNNNN --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=plots/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
 
 awk '{print $1}' whitelist_${PREFIX}.txt > whitelist_${PREFIX}_alevinReady.txt
 mv whitelist_${PREFIX}.txt logs/
 
 echo "starting alignment..."
 
-salmon --no-version-check alevin -lISR -1 ${READ1} -2 ${READ2} --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${SALMONINDEX} -p 10 --dumpCsvCounts -o alevinOut --tgMap ${TXP2GENE}
+${SALMON} --no-version-check alevin -lISR -1 ${READ1} -2 ${READ2} --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${SALMONINDEX} -p 10 --dumpCsvCounts -o alevinOut --tgMap ${TXP2GENE}
 
 echo "exporting matrix..."
 
-createMatrix alevinOut/
+${CREATEMATRIX} alevinOut/
 
 echo "cleaning directories..."
 
