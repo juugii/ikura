@@ -85,7 +85,7 @@ mv alevinOut/libParams/* logs/
 mv alevinOut/*.json logs/
 mv alevinOut/outs/* alevinOut/
 rm -r alevinOut/alevin/ alevinOut/aux_info/ alevinOut/libParams/ alevinOut/logs/ alevinOut/outs/
-mv whitelist_pipeTest_alevinReady.txt logs/goodCellBarcodes_${PREFIX}.txt
+mv whitelist_${PREFIX}_alevinReady.txt logs/goodCellBarcodes_${PREFIX}.txt
 mv alevinOut/ outs/
 
 echo "done."
