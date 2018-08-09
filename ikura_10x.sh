@@ -3,7 +3,7 @@
 #Jules GILET <jules.gilet@curie.fr>
 
 #custom pipeline for the analysis of single cell 10x experiments
-#alignment done with salmon
+#(pseudo-)alignment is done with salmon
 
 #requires a salmon-indexed transcriptome and its tx2gene
 #requires python-3.6.5 or above
@@ -15,7 +15,7 @@ if [[ $1 == "--help" || $1 == "-h" || $# != 6 ]]; then
 
 	echo "The script requires the following 6 arguments (in proper order):
 
-	scPipelineSalmon10x.sh <read1> <read2> <expectedCellNb> <samplePrefix> <salmonIndex> <txp2gene>
+	ikura_10x.sh <read1> <read2> <expectedCellNb> <samplePrefix> <salmonIndex> <txp2gene>
 
 	Paths to directories and files should be provided as absolute addresses
 
@@ -30,10 +30,10 @@ if [[ $1 == "--help" || $1 == "-h" || $# != 6 ]]; then
 fi
 
 
-#aliases and dependences
+#dependences
 UMITOOLS='/storage1/local/python/python-3.6.5/bin/umi_tools'
 SALMON='/storage1/downloads/salmon-0.11.1-linux_x86_64/bin/salmon'
-CREATEMATRIX='/storage1/scripts/scRNAseq/scCustomPipeline02_salmon/10x/createMatrix.rscript'
+CREATEMATRIX='/storage1/scripts/scRNAseq/ikura/10x/createMatrix.rscript'
 
 #VARS
 READ1=$1
@@ -44,11 +44,13 @@ SALMONINDEX=$5
 TXP2GENE=$6
 
 #exec
+START=`date +%M`
 if [ ! -d "$PREFIX" ]; then
 
 	mkdir $PREFIX
 
 fi
+
 cd ${PREFIX}
 
 if [ ! -d "logs" ]; then
@@ -62,6 +64,8 @@ if [ ! -d "plots" ]; then
         mkdir plots
 
 fi
+
+echo "job started on" `date`
 
 echo "identifying valid cell barcodes..."
 
@@ -88,6 +92,11 @@ rm -r alevinOut/alevin/ alevinOut/aux_info/ alevinOut/libParams/ alevinOut/logs/
 mv whitelist_${PREFIX}_alevinReady.txt logs/goodCellBarcodes_${PREFIX}.txt
 mv alevinOut/ outs/
 
-echo "done."
+END=`date +%M`
+RUNTIME=$((END-START))
+
+echo "job complete on " `date` 
+
+echo "total execution time (min): " $RUNTIME
 
 exit 0
