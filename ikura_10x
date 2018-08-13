@@ -89,7 +89,7 @@ SALMON='/storage1/downloads/salmon-0.11.1-linux_x86_64/bin/salmon'
 CREATEMATRIX='/storage1/scripts/scRNAseq/ikura/10x/createMatrix'
 
 #exec
-START=`date +%M`
+SECONDS=0
 
 echo ${CHECK}
 
@@ -163,10 +163,9 @@ rm -r alevinOut/alevin/ alevinOut/aux_info/ alevinOut/libParams/ alevinOut/logs/
 mv whitelist_${PREFIX}_alevinReady.txt logs/goodCellBarcodes_${PREFIX}.txt
 mv alevinOut/ outs/
 
-END=`date +%M`
-RUNTIME=$((END-START))
+END=${SECONDS}
 
 echo "job complete on " `date` 
-echo "total execution time (min): " $RUNTIME
+echo "total execution time (min): " $((${END} / 60))
 
 exit 0
