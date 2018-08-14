@@ -1,4 +1,4 @@
-#! /usr/bin/bash
+#! /usr/bin/env bash
 
 #Jules GILET <jules.gilet@curie.fr>
 
@@ -91,8 +91,6 @@ CREATEMATRIX='/storage1/scripts/scRNAseq/ikura/10x/createMatrix'
 #exec
 SECONDS=0
 
-echo ${CHECK}
-
 #setup directories
 if [ ! -d "$PREFIX" ]; then
 	mkdir $PREFIX
@@ -117,7 +115,7 @@ if [ ! -d "qc" ]; then
 fi
 
 #data process
-echo "job started on" `date`
+echo "job started on" $(date)
 if [ "${CHECK}" = "T" ]
 then
 	echo "cleaning fastq files..."
@@ -125,9 +123,9 @@ then
 
 	echo "checking the quality of fastq files..."
 	for FILEZ in ${READ1} ${READ2} fastq/${PREFIX}_trimmed_R1.fastq.gz fastq/${PREFIX}_trimmed_R2.fastq.gz; do
-		SHORT=`basename ${FILEZ}`
+		SHORT=$(basename ${FILEZ})
 		gunzip -c ${FILEZ} > ${SHORT%.*}.fastq
-		${FASTQC} -o qc/ -t 10 -q ${SHORT%.*}.fastq
+		${FASTQC} -o qc/ -t ${CORES} -q ${SHORT%.*}.fastq
 		rm ${SHORT%.*}.fastq
 	done
 
@@ -165,7 +163,7 @@ mv alevinOut/ outs/
 
 END=${SECONDS}
 
-echo "job complete on " `date` 
+echo "job complete on " $(date)
 echo "total execution time (min): " $((${END} / 60))
 
 exit 0
