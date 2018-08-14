@@ -121,7 +121,7 @@ echo "job started on" `date`
 if [ "${CHECK}" = "T" ]
 then
 	echo "cleaning fastq files..."
-	${CUTADAPT} -j ${CORES} -q 28 --max-n 0 --minimum-length 26 --pair-filter=any -o fastq/${PREFIX}_trimmed_R1.fastq.gz -p fastq/${PREFIX}_trimmed_R2.fastq.gz ${READ1} ${READ2} | tee logs/cutadapt.log
+	${CUTADAPT} -j ${CORES} -q 30 --max-n 0 --minimum-length 26 --pair-filter=any -o fastq/${PREFIX}_trimmed_R1.fastq.gz -p fastq/${PREFIX}_trimmed_R2.fastq.gz ${READ1} ${READ2} | tee logs/cutadapt.log
 
 	echo "checking the quality of fastq files..."
 	for FILEZ in ${READ1} ${READ2} fastq/${PREFIX}_trimmed_R1.fastq.gz fastq/${PREFIX}_trimmed_R2.fastq.gz; do
