@@ -119,9 +119,7 @@ echo "job started on" $(date)
 if [ "${CHECK}" = "T" ]
 then
 	echo "cleaning fastq files..."
-	${CUTADAPT} -j ${CORES} -q 30 --max-n 0 --minimum-length 26 --pair-filter=any -o fastq/${PREFIX}_firstPass_R1.fastq.gz -p fastq/${PREFIX}_firstPass_R2.fastq.gz ${READ1} ${READ2} | tee logs/cutadapt.log
-	${CUTADAPT} -j ${CORES} --minimum-length 90 -o fastq/${PREFIX}_trimmed_R2.fastq.gz -p fastq/${PREFIX}_trimmed_R1.fastq.gz fastq/${PREFIX}_firstPass_R2.fastq.gz fastq/${PREFIX}_firstPass_R1.fastq.gz | tee logs/cutadapt2.log
-	rm fastq/${PREFIX}_firstPass_R1.fastq.gz fastq/${PREFIX}_firstPass_R2.fastq.gz
+	${CUTADAPT} -j ${CORES} -q 30 --max-n 0 --minimum-length 26:90 --pair-filter=any -o fastq/${PREFIX}_trimmed_R1.fastq.gz -p fastq/${PREFIX}_trimmed_R2.fastq.gz ${READ1} ${READ2} | tee logs/cutadapt.log
 
 	echo "checking the quality of fastq files..."
 	for FILEZ in ${READ1} ${READ2} fastq/${PREFIX}_trimmed_R1.fastq.gz fastq/${PREFIX}_trimmed_R2.fastq.gz; do
@@ -138,7 +136,7 @@ then
 mv whitelist_${PREFIX}.txt logs/
 
 	echo "starting alignment..."
-	${SALMON} --no-version-check alevin -lISR -1 fastq/${PREFIX}_trimmed_R1.fastq.gz -2 fastq/${PREFIX}_trimmed_R2.fastq.gz --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${SALMONINDEX} -p ${CORES} --dumpCsvCounts -o alevinOut --tgMap ${TXP2GENE}
+	${SALMON} --no-version-check alevin -lISR -1 fastq/${PREFIX}_trimmed_R1.fastq.gz -2 fastq/${PREFIX}_trimmed_R2.fastq.gz --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${SALMONINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${TXP2GENE}
 
 else
 	echo "identifying valid cell barcodes..."
@@ -148,7 +146,7 @@ else
 mv whitelist_${PREFIX}.txt logs/
 
 	echo "starting alignment..."
-	${SALMON} --no-version-check alevin -lISR -1 ${READ1} -2 ${READ2} --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${SALMONINDEX} -p ${CORES} --dumpCsvCounts -o alevinOut --tgMap ${TXP2GENE}
+	${SALMON} --no-version-check alevin -lISR -1 ${READ1} -2 ${READ2} --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${SALMONINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${TXP2GENE}
 fi
 
 echo "exporting matrix..."
@@ -159,6 +157,8 @@ mv alevinOut/logs/* logs/
 mv alevinOut/libParams/* logs/
 mv alevinOut/*.json logs/
 mv alevinOut/outs/* alevinOut/
+mv alevinOut/alevin/MappedUmi.txt logs/
+mv alevinOut/alevin/filtered_cb_frequency.txt logs/
 rm -r alevinOut/alevin/ alevinOut/aux_info/ alevinOut/libParams/ alevinOut/logs/ alevinOut/outs/
 mv whitelist_${PREFIX}_alevinReady.txt logs/goodCellBarcodes_${PREFIX}.txt
 mv alevinOut/ outs/
