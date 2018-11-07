@@ -30,8 +30,9 @@ readAlevin <- function(path){
         rownames(mat) <- cells
         colnames(mat) <- make.unique(as.character(genes))
 
-        message("filtering matrix...")
-        mat <- mat[ ,colSums(mat)>0 ]
+#should not filter matrix by default
+#        message("filtering matrix...")
+#        mat <- mat[ ,colSums(mat)>0 ]
         
         message("creating sparse matrix...")
         mat <- Matrix(t(as.matrix(mat)), sparse=TRUE)
