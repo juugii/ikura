@@ -59,6 +59,7 @@ creatOutput <- function(path){
         dir.create(paste0(path,"/outs"), showWarnings=FALSE)
         mat <- readAlevin(path)
         exportMat(mat, path)
+	saveRDS(mat, file=paste0(path,"/outs/ikuraEmat.rds"))
 
 }
 
