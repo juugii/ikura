@@ -34,7 +34,7 @@ if [ $# -eq 0 ]; then
                         requires python-3.6.5, R-3.5.1, salmon-0.11.1, awk
                         requires a samon-indexed transcriptome
                         requires umi_tools 0.5.4 or above
-			could require fastqc-0.11.7 & cutadapt 1.16
+			fastq checking and precleaning require fastqc-0.11.7 & cutadapt 1.18
                         "
 
 	exit 0
@@ -61,7 +61,7 @@ while [ "$#" -gt 0 ]; do
 			requires python-3.6.5, R-3.5.1, salmon-0.11.1, awk
 			requires a samon-indexed transcriptome
 			requires umi_tools 0.5.4 or above
-			could require fastqc-0.11.7 & cutadapt 1.16
+			fastq checking and precleaning require fastqc-0.11.7 & cutadapt 1.18
 			"
 
 			exit 0;;
