@@ -23,19 +23,35 @@ readIkura <- function(path){
 }
 
 
+filterProtcod <- function(mat, protcodFile){
+
+	protcod <- readLines(protcodFile)
+	mat <- mat[ rownames(mat) %in% protcod, ]
+	return(mat)
+
+}
+
+
+filterMinGenesCells <- function(mat, minGenes=500, minCells=3){
+
+	mat <- mat[ (rowSums(mat > 0) > 3) ,(colSums(mat > 0) > 500) ]
+	return(mat)
+
+}
+
+
 filterIkura <- function(mat, protcodFile=NULL, minGenes=500, minCells=3){
 
 	if( !(is.null(protcodFile)) ) {
-		protcod <- readLines(protcodFile)
-		mat <- mat[ rownames(mat) %in% protcod, ]
-		mat <- mat[ (rowSums(mat > 0) > 3) ,(colSums(mat > 0) > 500) ]
-	} else {
-		mat <- mat[ (rowSums(mat > 0) > 3) ,(colSums(mat > 0) > 500) ]
-	}
+		mat <- filterProtcod(mat, protcodFile)
+	} else {print("Warning: matrice mights also contain non-protein coding genes.")}
+
+	mat <- filterMinGenesCells(mat, minGenes, minCells)
 
 	return(mat)
 
 }
+
 
 joinEmat <- function(mat1, mat2){
 
