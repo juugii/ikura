@@ -82,3 +82,18 @@ joinEmat <- function(mat1, mat2){
 }
 
 
+exportIkura <- function(mat, path){
+
+        require(Matrix)
+
+        cells <- colnames(mat)
+        genes <- rownames(mat)
+
+        message("exporting matrix...")
+        write.table(x=data.frame(cell=cells), file=paste0(path,"/barcodes.tsv"), row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t")
+        write.table(x=data.frame(gene=genes, gene=genes), file=paste0(path,"/genes.tsv"), row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t")
+        writeMM(mat, file=paste0(path,"/matrix.mtx"))
+
+        return("Done.")
+
+}
