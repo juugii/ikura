@@ -43,10 +43,12 @@ filterMinGenesCells <- function(mat, minGenes=500, minCells=3){
 filterIkura <- function(mat, protcodFile=NULL, minGenes=500, minCells=3){
 
 	if( !(is.null(protcodFile)) ) {
-		mat <- filterProtcod(mat, protcodFile)
-	} else {print("Warning: matrice mights also contain non-protein coding genes.")}
-
-	mat <- filterMinGenesCells(mat, minGenes, minCells)
+		protcod <- readLines(protcodFile)
+		mat <- mat[ rownames(mat) %in% protcod, ]
+		mat <- mat[ (rowSums(mat > 0) > minCells) ,(colSums(mat > 0) > minGenes) ]
+	} else {
+		mat <- mat[ (rowSums(mat > 0) > minCells) ,(colSums(mat > 0) > 500) ]
+	}
 
 	return(mat)
 
