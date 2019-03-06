@@ -34,7 +34,7 @@ filterProtcod <- function(mat, protcodFile){
 
 filterMinGenesCells <- function(mat, minGenes=500, minCells=3){
 
-	mat <- mat[ (rowSums(mat > 0) > 3) ,(colSums(mat > 0) > 500) ]
+	mat <- mat[ (rowSums(mat > 0) > minCells) ,(colSums(mat > 0) > minGenes) ]
 	return(mat)
 
 }
