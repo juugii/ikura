@@ -1,0 +1,21 @@
+#! /usr/bin/env bash
+
+# test if the dependencies can be loaded
+
+test_prog(){
+
+	command -v $1 >/dev/null 2>&1 || {
+		echo 1>&2 "Program $1 is required to ikura but isn't properly installed. Please check your configuration. Aborted!"
+		exit 1
+	}
+
+}
+
+
+source dependencies.txt
+
+for PROGS in $FASTQC $CUTADAPT $UMITOOLS $SALMON $RPATH $CUTADAPT $UMITOOLS $MTQC; do
+
+	test_prog ${PROGS}
+
+done	
