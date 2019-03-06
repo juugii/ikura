@@ -41,6 +41,7 @@ if ! sources/checkdep; then
 	exit 1
 fi
 
+source dependencies.txt
 
 # options
 CHECK="T"
@@ -96,6 +97,9 @@ fi
 
 # data process
 echo "job started on" $(date)
+echo $CHECK $READ1 $READ2 $MAXCELLS $PREFIX $SALMONINDEX $TXP2GENE
+echo $FASTQC $CUTADAPT $UMITOOLS $SALMON $RPATH $CUTADAPT $UMITOOLS $MTQC
+
 if [ "${CHECK}" == "T" ]
 then
 	echo "cleaning fastq files..."
