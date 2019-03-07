@@ -43,6 +43,7 @@ if ! sources/checkdep; then
 fi
 
 source dependencies.txt
+source sources/pydep
 
 # options
 CHECK="T"
@@ -98,7 +99,6 @@ fi
 
 # data process
 echo "job started on" $(date)
-source sources/pydep
 
 if [ "${CHECK}" == "T" ]
 then
