@@ -1,0 +1,3 @@
+CUTADAPT=${PYPATH}/bin/cutadapt
+UMITOOLS=${PYPATH}/bin/umi_tools
+MTQC=${PYPATH}/bin/multiqc
