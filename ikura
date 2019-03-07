@@ -5,13 +5,14 @@
 # Pipeline for the primary analysis of single cell (3') 10x experiments
 # (pseudo-)alignment is perfomed by salmon engine
 
+VERSION="v1.0"
 EXECDIR=${PWD}
 SCRIPTDIR="$(dirname "$0")"
 
 usage(){
 	
 	echo ""
-	echo "Ikura v1.0"
+	echo "Ikura ${VERSION}"
 	echo "Usage:	$0	[-q|--no-fastq-check] (optional)
 		[-1|--read1] <read1>
 		[-2|--read2] <read2>
@@ -22,7 +23,7 @@ usage(){
 		[-t|--threads] <coresNb> (optional, default is 10)
 
 	NOTE: files should be specified as absolute paths.
-	Ikura creates output results where the command is executed.
+	Ikura creates an output directory where the command is executed.
 	"
 
 	exit 0
@@ -97,6 +98,7 @@ fi
 
 # data process
 echo "job started on" $(date)
+source sources/pydep
 
 if [ "${CHECK}" == "T" ]
 then
@@ -134,7 +136,7 @@ fi
 echo "exporting matrix..."
 ${SCRIPTDIR}/sources/createMatrix alevinOut/
 
-${MTQC} --title "Ikura Report" --comment "QC on sample ${PREFIX}" .
+${MTQC} -e cutadapt -n ${PREFIX}_Ikura_QC_report.html --title "Ikura Report" --comment "QC on sample ${PREFIX}" .
 
 echo "cleaning directories..."
 mv alevinOut/logs/* logs/
