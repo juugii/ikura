@@ -1,0 +1,11 @@
+# Dependencies:
+# python>=3.6.5, R>=3.5.1, salmon>=0.11.1, awk
+# requires umi_tools>=0.5.4
+# fastq QC and precleaning require fastqc-0.11.7, multiqc >=1.5 & cutadapt 1.18
+
+# edit the following paths according to your system configuration
+
+PYPATH=/storage1/local/python/python-3.6.5
+FASTQC=/storage1/downloads/fastqc-0.11.7/fastqc
+SALMON=/storage1/downloads/salmon-0.11.1-linux_x86_64/bin/salmon
+RPATH=/storage1/local/R/R-3.5.1/bin/R
