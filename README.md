@@ -60,8 +60,9 @@ It has the following dependencies: python>=3.6.5, R>=3.5.0, salmon>=0.11.1, awk,
 
 ## Installing
 
+First, install [salmon](https://github.com/COMBINE-lab/salmon) >= 0.11 and [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc) >= 0.11.7 on your system. You will also need to have R (>=3.5.0 preferred) and python>=3.6.5 installed.
 
-
+For Ikura to work out-of-the-box, all of these softwares should be directly callable, so add them to your path. Alternatively, you can edit manualy the 'dependencies.txt' file to integrate Ikura to your system. In case of any bad configuration, Ikura will warn you.
 
 ## Citation
 
