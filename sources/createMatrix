@@ -1,11 +1,11 @@
-#! /data/users/jgilet/.local/R/R-3.5.0/bin/Rscript
+# Jules GILET <jules.gilet@curie.fr>
 
-#Jules GILET <jules.gilet@curie.fr>
+# part of the single cell custom pipeline for 10x datasets - salmon flavor
+# create folder with expression matrices
 
-#part of the single cell custom pipeline for 10x datasets - salmon flavor
-#create folder with matrix from salmon pseudo-alignment
 
-#reading opt file as first argument
+# reading opt file
+
 args <- commandArgs(TRUE)
 
 if(length(args)==0){
@@ -17,6 +17,7 @@ if(length(args)==0){
 }
 
 #functions
+
 readAlevin <- function(path){
 
         require(Matrix)
@@ -30,7 +31,7 @@ readAlevin <- function(path){
         rownames(mat) <- cells
         colnames(mat) <- make.unique(as.character(genes))
 
-#should not filter matrix by default
+# should not filter matrix by default
 #        message("filtering matrix...")
 #        mat <- mat[ ,colSums(mat)>0 ]
         

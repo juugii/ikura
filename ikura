@@ -134,7 +134,7 @@ mv whitelist_${PREFIX}.txt logs/
 fi
 
 echo "exporting matrix..."
-${SCRIPTDIR}/sources/createMatrix alevinOut/
+${RPATH}script ${SCRIPTDIR}/sources/createMatrix alevinOut/
 
 ${MTQC} -n ${PREFIX}_Ikura_QC_report.html --title "Ikura Report" --comment "QC on sample ${PREFIX}" .
 
