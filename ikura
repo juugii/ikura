@@ -56,7 +56,7 @@ source sources/pydep
 CHECK="T"
 CORES=10
 MAXCELLS=8000
-MODE="quantif"
+MODE='quantif'
 cd "${EXECDIR}"
 
 
@@ -65,11 +65,11 @@ while [ "$#" -gt 0 ]; do
 
 		-h|--help) usage;;
 
-		-w|--warmup) MODE="warmup"; shift 1;;
+		-w|--warmup) MODE='warmup'; shift 1;;
 		-t|--transcripts) TRANSC="$2"; shift 2;;
 		-a|--annotation) ANNO="$2"; shift 2;;
 		-i|--index) IKURAINDEX="$2"; shift 2;;
-		-p|--processes) CORES="$2"; shift 2;;
+		-p|--processes) CORES="$2" shift 2;;
 
 		-q|--no-fastq-check) CHECK="F"; shift 1;;
 		-1|--read1) READ1="$2"; shift 2;;
@@ -84,47 +84,49 @@ while [ "$#" -gt 0 ]; do
 	esac
 done
 
+echo ${IKURAINDEX} ${TRANSC} ${ANNO} ${CORES}
+
 
 # exec
 SECONDS=0
 
-# setup directories
-if [ ! -d "$PREFIX" ]; then
-	mkdir $PREFIX
-fi
-
-cd ${PREFIX}
-
-if [ ! -d "logs" ]; then
-	mkdir logs
-fi
-
-if [ ! -d "plots" ]; then
-        mkdir plots
-fi
-
-if [ ! -d "fastq" ]; then
-        mkdir fastq
-fi
-
-if [ ! -d "qc" ]; then
-        mkdir qc
-fi
-
 # data process
 echo "job started on" $(date)
 
-if [ "${MODE}"== "warmup" ]
+if [ "${MODE}" = 'warmup' ]
 then
 
-	source sources/warmup
+	source ${SCRIPTDIR}/sources/warmup
 	warmup ${IKURAINDEX} ${TRANSC} ${ANNO} ${CORES}
 	echo "Index successfully built."
 
 	exit 0
 
-elif [ "${MODE}"== "quantif" ]
+elif [ "${MODE}" = 'quantif' ]
 then
+
+	# setup directories
+	if [ ! -d "$PREFIX" ]; then
+	        mkdir $PREFIX
+	fi
+	
+	cd ${PREFIX}
+	
+	if [ ! -d "logs" ]; then
+	        mkdir logs
+	fi
+	
+	if [ ! -d "plots" ]; then
+	        mkdir plots
+	fi
+	
+	if [ ! -d "fastq" ]; then
+	        mkdir fastq
+	fi
+	
+	if [ ! -d "qc" ]; then
+	        mkdir qc
+	fi
 
 	if [ "${CHECK}" == "T" ]
 	then
