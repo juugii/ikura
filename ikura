@@ -13,13 +13,21 @@ usage(){
 	
 	echo ""
 	echo "Ikura ${VERSION}"
-	echo "Usage:	$0	[-q|--no-fastq-check] (optional)
-		[-1|--read1] <read1>
-		[-2|--read2] <read2>
-		[-n|--expectedCells] <expectedCellNb>
-		[-o|--output] <samplePrefix>
-		[-i|--index] <ikuraIndexDir>
-		[-t|--threads] <coresNb> (optional, default is 10)
+	echo "Usage:"
+	echo "Index: ./ikura --warmup	[-t|--transcripts] <transcripts.fa>
+			[-a|--annotation] <annotation.gtf>
+			[-i|--index] <ikuraIndex>
+			[-p|--processes] <coresNb> (optional, default is 10)
+
+	"	
+
+	echo "Quantif: ./ikura	[-q|--no-fastq-check] (optional)
+			[-1|--read1] <read1>
+			[-2|--read2] <read2>
+			[-n|--expectedCells] <expectedCellNb>
+			[-o|--output] <samplePrefix>
+			[-i|--index] <ikuraIndexDir>
+			[-t|--threads] <coresNb> (optional, default is 10)
 
 	NOTE: files should be specified as absolute paths.
 	Ikura creates an output directory where the command is executed.
@@ -47,13 +55,21 @@ source sources/pydep
 # options
 CHECK="T"
 CORES=10
+MAXCELLS=8000
+MODE="quantif"
 cd "${EXECDIR}"
 
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 
-		-h|--help)	usage;;
+		-h|--help) usage;;
+
+		-w|--warmup) MODE="warmup"; shift 1;;
+		-t|--transcripts) TRANSC="$2"; shift 2;;
+		-a|--annotation) ANNO="$2"; shift 2;;
+		-i|--index) IKURAINDEX="$2"; shift 2;;
+		-p|--processes) CORES="$2"; shift 2;;
 
 		-q|--no-fastq-check) CHECK="F"; shift 1;;
 		-1|--read1) READ1="$2"; shift 2;;
@@ -98,37 +114,51 @@ fi
 # data process
 echo "job started on" $(date)
 
-if [ "${CHECK}" == "T" ]
+if [ "${MODE}"== "warmup" ]
 then
-	echo "cleaning fastq files..."
-	${CUTADAPT} -j ${CORES} -q 30 --max-n 0 --minimum-length 26:90 --pair-filter=any -o fastq/${PREFIX}_trimmed_R1.fastq.gz -p fastq/${PREFIX}_trimmed_R2.fastq.gz ${READ1} ${READ2} | tee logs/cutadapt.log
 
-	echo "checking the quality of fastq files..."
-	for FILEZ in ${READ1} ${READ2} fastq/${PREFIX}_trimmed_R1.fastq.gz fastq/${PREFIX}_trimmed_R2.fastq.gz; do
-		SHORT=$(basename ${FILEZ})
-		gunzip -c ${FILEZ} > ${SHORT%.*}.fastq
-		${FASTQC} -o qc/ -t ${CORES} -q ${SHORT%.*}.fastq
-		rm ${SHORT%.*}.fastq
-	done
+	source sources/warmup
+	warmup ${IKURAINDEX} ${TRANSC} ${ANNO} ${CORES}
+	echo "Index successfully built."
 
-	echo "identifying valid cell barcodes..."
-	${UMITOOLS} whitelist --stdin fastq/${PREFIX}_trimmed_R1.fastq.gz --bc-pattern=CCCCCCCCCCCCCCCCNNNNNNNNNN --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=plots/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
+	exit 0
 
-	awk '{print $1}' whitelist_${PREFIX}.txt > whitelist_${PREFIX}_alevinReady.txt
-mv whitelist_${PREFIX}.txt logs/
+elif [ "${MODE}"== "quantif" ]
+then
 
-	echo "starting alignment..."
-	${SALMON} --no-version-check alevin -lISR -1 fastq/${PREFIX}_trimmed_R1.fastq.gz -2 fastq/${PREFIX}_trimmed_R2.fastq.gz --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${IKURAINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${IKURAINDEX}/txp2gene_*.tsv
+	if [ "${CHECK}" == "T" ]
+	then
+		echo "cleaning fastq files..."
+		${CUTADAPT} -j ${CORES} -q 30 --max-n 0 --minimum-length 26:90 --pair-filter=any -o fastq/${PREFIX}_trimmed_R1.fastq.gz -p fastq/${PREFIX}_trimmed_R2.fastq.gz ${READ1} ${READ2} | tee logs/cutadapt.log
+	
+		echo "checking the quality of fastq files..."
+		for FILEZ in ${READ1} ${READ2} fastq/${PREFIX}_trimmed_R1.fastq.gz fastq/${PREFIX}_trimmed_R2.fastq.gz; do
+			SHORT=$(basename ${FILEZ})
+			gunzip -c ${FILEZ} > ${SHORT%.*}.fastq
+			${FASTQC} -o qc/ -t ${CORES} -q ${SHORT%.*}.fastq
+			rm ${SHORT%.*}.fastq
+		done
+	
+		echo "identifying valid cell barcodes..."
+		${UMITOOLS} whitelist --stdin fastq/${PREFIX}_trimmed_R1.fastq.gz --bc-pattern=CCCCCCCCCCCCCCCCNNNNNNNNNN --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=plots/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
+	
+		awk '{print $1}' whitelist_${PREFIX}.txt > whitelist_${PREFIX}_alevinReady.txt
+	mv whitelist_${PREFIX}.txt logs/
+	
+		echo "starting alignment..."
+		${SALMON} --no-version-check alevin -lISR -1 fastq/${PREFIX}_trimmed_R1.fastq.gz -2 fastq/${PREFIX}_trimmed_R2.fastq.gz --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${IKURAINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${IKURAINDEX}/txp2gene_*.tsv
+	
+	else
+		echo "identifying valid cell barcodes..."
+		${UMITOOLS} whitelist --stdin ${READ1} --bc-pattern=CCCCCCCCCCCCCCCCNNNNNNNNNN --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=plots/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
+	
+		awk '{print $1}' whitelist_${PREFIX}.txt > whitelist_${PREFIX}_alevinReady.txt
+		mv whitelist_${PREFIX}.txt logs/
+	
+		echo "starting alignment..."
+		${SALMON} --no-version-check alevin -lISR -1 ${READ1} -2 ${READ2} --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${IKURAINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${IKURAINDEX}/txp2gene_*.tsv
+	fi
 
-else
-	echo "identifying valid cell barcodes..."
-	${UMITOOLS} whitelist --stdin ${READ1} --bc-pattern=CCCCCCCCCCCCCCCCNNNNNNNNNN --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=plots/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
-
-	awk '{print $1}' whitelist_${PREFIX}.txt > whitelist_${PREFIX}_alevinReady.txt
-mv whitelist_${PREFIX}.txt logs/
-
-	echo "starting alignment..."
-	${SALMON} --no-version-check alevin -lISR -1 ${READ1} -2 ${READ2} --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${IKURAINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${IKURAINDEX}/txp2gene_*.tsv
 fi
 
 echo "exporting matrix..."
