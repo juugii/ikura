@@ -63,6 +63,7 @@ install: install_pydep
 	for file in $(INSTALL_FILES); do cp $$file $(PREFIX)/$$file; done
 	mkdir -p $(DOC_DIR)
 	cp -r $(DOC_FILES) $(DOC_DIR)/
+	@echo "Successfully installed Ikura."
 
 uninstall:
 	for file in $(INSTALL_FILES); do rm -f $(PREFIX)/$$file; done
