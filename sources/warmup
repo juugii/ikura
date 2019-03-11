@@ -1,0 +1,22 @@
+#! /usr/bin/env bash
+
+# Jules GILET <jules.gilet@curie.fr>
+
+# Creation of Ikura index
+
+# arg1 indexName
+# arg2 transcripts.fa
+# arg3 ref.gtf
+# arg4 CORES
+
+warmup(){
+
+	${SALMON} --no-version-check index -t $2 -k 31 -i $1 --gencode -p $4 --type quasi
+	echo "building additional files..."
+	awk -F "\t" '{if($3=="transcript"){split($9, aay, "\""); print aay[4], aay[8]}}' $3 > $1/txp2gene_$1.tsv
+	awk -F "\t" '{split($9, aay, "\""); if($3=="gene" && aay[4]=="protein_coding"){print aay[6]}}' $3 | sort -u > $1/codprot.lst
+	echo "Done."
+
+}
+
+
