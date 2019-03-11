@@ -18,8 +18,7 @@ usage(){
 		[-2|--read2] <read2>
 		[-n|--expectedCells] <expectedCellNb>
 		[-o|--output] <samplePrefix>
-		[-i|--index] <salmonIndex>
-		[-g|--txp2gene] <txp2gene>
+		[-i|--index] <ikuraIndexDir>
 		[-t|--threads] <coresNb> (optional, default is 10)
 
 	NOTE: files should be specified as absolute paths.
@@ -61,8 +60,7 @@ while [ "$#" -gt 0 ]; do
 		-2|--read2) READ2="$2"; shift 2;;
 		-n|--expectedCells) MAXCELLS="$2"; shift 2;;
 		-o|--output) PREFIX="$2"; shift 2;;
-		-i|--index) SALMONINDEX="$2"; shift 2;;
-		-g|--txp2gene) TXP2GENE="$2"; shift 2;;
+		-i|--index) IKURAINDEX="$2"; shift 2;;
 		-t|--threads) CORES="$2"; shift 2;;
 
 		-*|--*) echo "unknown option: $1" >&2; exit 1;;
@@ -120,7 +118,7 @@ then
 mv whitelist_${PREFIX}.txt logs/
 
 	echo "starting alignment..."
-	${SALMON} --no-version-check alevin -lISR -1 fastq/${PREFIX}_trimmed_R1.fastq.gz -2 fastq/${PREFIX}_trimmed_R2.fastq.gz --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${SALMONINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${TXP2GENE}
+	${SALMON} --no-version-check alevin -lISR -1 fastq/${PREFIX}_trimmed_R1.fastq.gz -2 fastq/${PREFIX}_trimmed_R2.fastq.gz --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${IKURAINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${IKURAINDEX}/txp2gene_*.tsv
 
 else
 	echo "identifying valid cell barcodes..."
@@ -130,11 +128,11 @@ else
 mv whitelist_${PREFIX}.txt logs/
 
 	echo "starting alignment..."
-	${SALMON} --no-version-check alevin -lISR -1 ${READ1} -2 ${READ2} --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${SALMONINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${TXP2GENE}
+	${SALMON} --no-version-check alevin -lISR -1 ${READ1} -2 ${READ2} --chromium --whitelist whitelist_${PREFIX}_alevinReady.txt -i ${IKURAINDEX} -p ${CORES} --dumpFeatures --dumpCsvCounts -o alevinOut --tgMap ${IKURAINDEX}/txp2gene_*.tsv
 fi
 
 echo "exporting matrix..."
-${RPATH}script ${SCRIPTDIR}/sources/createMatrix alevinOut/ {SALMONINDEX}/codprot
+${RPATH}script ${SCRIPTDIR}/sources/createMatrix alevinOut/ {IKURAINDEX}/codprot
 
 ${MTQC} -n ${PREFIX}_Ikura_QC_report.html --title "Ikura Report" --comment "QC on sample ${PREFIX}" .
 
