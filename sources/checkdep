@@ -14,7 +14,7 @@ test_prog(){
 
 source dependencies.txt
 
-for PROGS in $FASTQC $CUTADAPT $UMITOOLS $SALMON $RPATH $CUTADAPT $UMITOOLS $MTQC; do
+for PROGS in $FASTQC $CUTADAPT $UMITOOLS $SALMON $RPATH/R $CUTADAPT $UMITOOLS $MTQC; do
 
 	test_prog ${PROGS}
 
