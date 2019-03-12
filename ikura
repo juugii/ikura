@@ -164,7 +164,7 @@ then
 fi
 
 echo "exporting matrix..."
-${RPATH}/Rscript ${SCRIPTDIR}/sources/createMatrix alevinOut/ ${IKURAINDEX}/codprot
+${RPATH}/Rscript ${SCRIPTDIR}/sources/createMatrix alevinOut/ ${IKURAINDEX}/codprot.lst
 
 ${MTQC} -n ${PREFIX}_Ikura_QC_report.html --title "Ikura Report" --comment "QC on sample ${PREFIX}" .
 
