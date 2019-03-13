@@ -169,16 +169,16 @@ ${RPATH}/Rscript ${SCRIPTDIR}/sources/createMatrix alevinOut/ ${IKURAINDEX}/codp
 ${MTQC} -n ${PREFIX}_Ikura_QC_report.html --title "Ikura Report" --comment "QC on sample ${PREFIX}" .
 
 echo "cleaning directories..."
-mv alevinOut/logs/* logs/
-mv alevinOut/libParams/* logs/
-mv alevinOut/*.json logs/
-mv alevinOut/outs/* alevinOut/
-mv alevinOut/alevin/MappedUmi.txt logs/
-mv alevinOut/alevin/filtered_cb_frequency.txt logs/
-rm -r alevinOut/alevin/ alevinOut/aux_info/ alevinOut/libParams/ alevinOut/logs/ alevinOut/outs/
-mv whitelist_${PREFIX}_alevinReady.txt logs/goodCellBarcodes_${PREFIX}.txt
-mv alevinOut/ outs/
-rm -r ${PREFIX}_Ikura_QC_report_data
+# mv alevinOut/logs/* logs/
+# mv alevinOut/libParams/* logs/
+# mv alevinOut/*.json logs/
+# mv alevinOut/outs/* alevinOut/
+# mv alevinOut/alevin/MappedUmi.txt logs/
+# mv alevinOut/alevin/filtered_cb_frequency.txt logs/
+# rm -r alevinOut/alevin/ alevinOut/aux_info/ alevinOut/libParams/ alevinOut/logs/ alevinOut/outs/
+# mv whitelist_${PREFIX}_alevinReady.txt logs/goodCellBarcodes_${PREFIX}.txt
+# mv alevinOut/ outs/
+# rm -r ${PREFIX}_Ikura_QC_report_data
 
 END=${SECONDS}
 

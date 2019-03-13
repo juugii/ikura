@@ -36,8 +36,8 @@ readAlevin <- function(path){
 #        message("filtering matrix...")
 #        mat <- mat[ ,colSums(mat)>0 ]
        
-	mat <- mat[ rownames(mat) %in% pc, ]
- 
+	mat <- mat[ ,colnames(mat) %in% pc ] 
+
         message("creating sparse matrix...")
         mat <- Matrix(t(as.matrix(mat)), sparse=TRUE)
 
