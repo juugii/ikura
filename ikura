@@ -170,7 +170,7 @@ then
 	
 	else
 		echo "identifying valid cell barcodes..."
-		${UMITOOLS} whitelist --stdin ${READ1} --bc-pattern=CCCCCCCCCCCCCCCCNNNNNNNNNN --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=cell_calling/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
+		${UMITOOLS} whitelist --stdin ${READ1} --bc-pattern=${BC} --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=cell_calling/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
 	
 		awk '{print $1}' whitelist_${PREFIX}.txt > whitelist_${PREFIX}_alevinReady.txt
 		mv whitelist_${PREFIX}.txt logs/
