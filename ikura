@@ -87,21 +87,23 @@ while [ "$#" -gt 0 ]; do
 	esac
 done
 
+
 if [ "${LIB}" = 'NONE' ]
 then
 
 	source ${SCRIPTDIR}/sources/libcheck
 	LIB=$(testlib ${READ1})
-else
-
-	source ${SCRIPTDIR}/sources/libcheck
-	echo "INFO: 10x ${LIB} chemistry has been autodetected. In case of any wrong autodetection, abort with Ctrl-C and force the library detection with option --library|-l <v2|v3|vdj>."
-	BC=$(setbarcode ${LIB})
-	MAXL=$(minlen ${LIB})
-	MINL=$(maxlen ${LIB})
-
 fi
 
+source ${SCRIPTDIR}/sources/libcheck
+echo ""
+echo "INFO: 10x ${LIB} chemistry has been autodetected." 
+echo "In case of any wrong autodetection, abort with Ctrl-C and force the library detection with --library|-l <v2|v3|vdj>."
+echo ""
+BC=$(setbarcode ${LIB})
+MAXL=$(minlen ${LIB})
+MINL=$(maxlen ${LIB})
+	
 
 # exec
 SECONDS=0
