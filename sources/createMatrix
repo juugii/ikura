@@ -1,22 +1,24 @@
-#! /data/users/jgilet/.local/R/R-3.5.0/bin/Rscript
+# Jules GILET <jules.gilet@curie.fr>
 
-#Jules GILET <jules.gilet@curie.fr>
+# part of the single cell custom pipeline for 10x datasets - salmon flavor
+# create folder with expression matrices
 
-#part of the single cell custom pipeline for 10x datasets - salmon flavor
-#create folder with matrix from salmon pseudo-alignment
 
-#reading opt file as first argument
+# reading opt file
+
 args <- commandArgs(TRUE)
 
 if(length(args)==0){
 	stop("Error: the salmon output path should be supplied as first argument.", call.=FALSE)
-} else if(length(args)==1){
+} else if(length(args)==2){
 	path <- args[1]
-} else if(length(args)>1){
+	pc <- read.delim(file=args[2], stringsAsFactors=FALSE, row.names=NULL, header=FALSE)$V1
+} else if(length(args)>2){
 	stop("Error: incorrect number of arguments.", call.=FALSE)
 }
 
 #functions
+
 readAlevin <- function(path){
 
         require(Matrix)
@@ -30,10 +32,12 @@ readAlevin <- function(path){
         rownames(mat) <- cells
         colnames(mat) <- make.unique(as.character(genes))
 
-	# should not filter by default
-        # message("filtering matrix...")
-        # mat <- mat[ ,colSums(mat)>0 ]
-        
+# should not filter matrix by default
+#        message("filtering matrix...")
+#        mat <- mat[ ,colSums(mat)>0 ]
+       
+	mat <- mat[ ,colnames(mat) %in% pc ] 
+
         message("creating sparse matrix...")
         mat <- Matrix(t(as.matrix(mat)), sparse=TRUE)
 
@@ -59,6 +63,7 @@ creatOutput <- function(path){
         dir.create(paste0(path,"/outs"), showWarnings=FALSE)
         mat <- readAlevin(path)
         exportMat(mat, path)
+	saveRDS(mat, file=paste0(path,"/outs/ikuraEmat.rds"))
 
 }
 
