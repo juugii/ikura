@@ -2,10 +2,10 @@
 
 # Jules GILET <jules.gilet@curie.fr>
 
-# Pipeline for the primary analysis of single cell (3') 10x experiments
+# Pipeline for the primary analysis of single cell 10x experiments
 # (pseudo-)alignment is perfomed by salmon engine
 
-VERSION="v1.0"
+VERSION="v1.1"
 EXECDIR=${PWD}
 SCRIPTDIR="$(dirname "$0")"
 
@@ -22,6 +22,7 @@ usage(){
 	"	
 
 	echo "Quantif: ./ikura	[-q|--no-fastq-check] (optional)
+			[-l|--libtype] <v2|v3|vdj> (optional)
 			[-1|--read1] <read1>
 			[-2|--read2] <read2>
 			[-n|--expectedCells] <expectedCellNb>
@@ -57,6 +58,7 @@ CHECK="T"
 CORES=10
 MAXCELLS=8000
 MODE='quantif'
+LIB='NONE'
 cd "${EXECDIR}"
 
 
@@ -72,6 +74,7 @@ while [ "$#" -gt 0 ]; do
 		-p|--processes) CORES="$2" shift 2;;
 
 		-q|--no-fastq-check) CHECK="F"; shift 1;;
+		-l|--libtype) LIB="$2"; shift 2;;
 		-1|--read1) READ1="$2"; shift 2;;
 		-2|--read2) READ2="$2"; shift 2;;
 		-n|--expectedCells) MAXCELLS="$2"; shift 2;;
@@ -84,7 +87,20 @@ while [ "$#" -gt 0 ]; do
 	esac
 done
 
-echo ${IKURAINDEX} ${TRANSC} ${ANNO} ${CORES}
+if [ "${LIB}" = 'NONE' ]
+then
+
+	source ${SCRIPTDIR}/sources/libcheck
+	LIB=$(testlib ${READ1})
+else
+
+	source ${SCRIPTDIR}/sources/libcheck
+	echo "INFO: 10x ${LIB} chemistry has been autodetected. In case of any wrong autodetection, abort with Ctrl-C and force the library detection with option --library|-l <v2|v3|vdj>."
+	BC=$(setbarcode ${LIB})
+	MAXL=$(minlen ${LIB})
+	MINL=$(maxlen ${LIB})
+
+fi
 
 
 # exec
@@ -131,7 +147,7 @@ then
 	if [ "${CHECK}" == "T" ]
 	then
 		echo "cleaning fastq files..."
-		${CUTADAPT} -j ${CORES} -q 30 --max-n 0 --minimum-length 26:90 --pair-filter=any -o fastq/${PREFIX}_trimmed_R1.fastq.gz -p fastq/${PREFIX}_trimmed_R2.fastq.gz ${READ1} ${READ2} | tee logs/cutadapt.log
+		${CUTADAPT} -j ${CORES} -q 30 --max-n 0 --minimum-length ${MAXL}:${MINL} --pair-filter=any -o fastq/${PREFIX}_trimmed_R1.fastq.gz -p fastq/${PREFIX}_trimmed_R2.fastq.gz ${READ1} ${READ2} | tee logs/cutadapt.log
 	
 		echo "checking the quality of fastq files..."
 		for FILEZ in ${READ1} ${READ2} fastq/${PREFIX}_trimmed_R1.fastq.gz fastq/${PREFIX}_trimmed_R2.fastq.gz; do
@@ -142,7 +158,7 @@ then
 		done
 	
 		echo "identifying valid cell barcodes..."
-		${UMITOOLS} whitelist --stdin fastq/${PREFIX}_trimmed_R1.fastq.gz --bc-pattern=CCCCCCCCCCCCCCCCNNNNNNNNNN --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=plots/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
+		${UMITOOLS} whitelist --stdin fastq/${PREFIX}_trimmed_R1.fastq.gz --bc-pattern=${BC} --expect-cells=${MAXCELLS} -L logs/umiWhitelist${PREFIX}.log --verbose=2 --plot-prefix=plots/filteringPlot_${PREFIX} > whitelist_${PREFIX}.txt
 	
 		awk '{print $1}' whitelist_${PREFIX}.txt > whitelist_${PREFIX}_alevinReady.txt
 	mv whitelist_${PREFIX}.txt logs/

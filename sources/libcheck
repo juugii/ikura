@@ -1,0 +1,103 @@
+#! /usr/bin/env bash
+
+# Jules GILET <jules.gilet@curie.fr>
+
+# Test 10x library type
+
+testlib(){
+
+	LEN=$(zcat $1 | head -n 2 | tail -n 1 | wc -m)
+
+	if [ ${LEN} -eq 27 ]
+	then
+		LIBTYPE="v2"
+
+	elif [ ${LEN} -eq 29 ]
+	then
+		LIBTYPE="v3"
+
+	elif [ ${LEN} -eq 152 ]	
+	then
+		LIBTYPE="vdj"
+
+	else
+
+		echo "Unable to autodetect chemistry type. Please manually check the structure of your fastq file and force the library detection with option --library|-l <v2|v3|vdj>."
+		exit 1
+
+	fi
+	
+	echo ${LIBTYPE}
+
+}
+
+
+setbarcode(){
+
+        if [ $1 = 'v2' ]
+        then
+                RES="CCCCCCCCCCCCCCCCNNNNNNNNNN"
+
+        elif [ $1 = 'v3' ]
+        then
+                RES="CCCCCCCCCCCCCCCCNNNNNNNNNNNN"
+
+        elif [ $1 = 'vdj' ]
+        then
+                RES="CCCCCCCCCCCCCCCCNNNNNNNNNN"
+
+        else
+		echo "Error in library type statement. Please check the option that has been passed."
+
+	fi
+
+}
+
+
+minlen(){
+
+        if [ $1 = 'v2' ]
+        then
+                RES=26
+
+        elif [ $1 = 'v3' ]
+        then
+                RES=28
+
+        elif [ $1 = 'vdj' ]
+        then
+                RES=150
+
+        else
+                echo "Error in library type statement. Please check the option that has been passed."
+
+        fi
+
+	echo ${RES}
+
+}
+
+
+maxlen(){
+
+        if [ $1 = 'v2' ]
+        then
+                RES=90
+
+        elif [ $1 = 'v3' ]
+        then
+                RES=90
+
+        elif [ $1 = 'vdj' ]
+        then
+                RES=150
+
+        else
+                echo "Error in library type statement. Please check the option that has been passed."
+
+        fi
+	
+	echo ${RES}
+
+}
+
