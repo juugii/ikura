@@ -50,8 +50,8 @@ if ! sources/checkdep; then
 	exit 1
 fi
 
-source dependencies.txt
-source sources/pydep
+source ${SCRIPTDIR}/dependencies.txt
+source ${SCRIPTDIR}/sources/pydep
 
 # options
 CHECK="T"
