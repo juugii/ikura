@@ -79,7 +79,7 @@ The expected cell number will help identifying the true cellular barcodes (the d
 
 ## And after?
 
-A html report has been generated in the output folder. Details on the cell calling are inside the "plots" folder. You can now import the transcript quantification with Seurat (ie. Read10x("/path/to/folder/nameOfSample/outs")) or any other tools. An R object is also available in this output directory.
+A html report has been generated in the output folder. Details on the cell calling are inside the same named folder. You can now import the transcript quantification with Seurat (ie. Read10x("/path/to/folder/nameOfSample/outs")) or any other tools, or load the sparse matrix (.rds file).
 
 If work on T-cells or B-cells, you might be interested by Ikura's companion tool: [Tobiko](https://github.com/juugii/Tobiko).
 
