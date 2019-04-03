@@ -1,5 +1,5 @@
 NAME=Ikura
-VERSION="1.0"
+VERSION="1.1"
 AUTHOR="Jules GILET"
 SHELL := /usr/bin/env bash
 
