@@ -5,3 +5,4 @@ comparison2.pdf
 pkg/*
 notesQualityPretrim.txt
 utilities.R
+.gitignore
