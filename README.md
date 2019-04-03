@@ -96,7 +96,7 @@ First, manually install [salmon](https://github.com/COMBINE-lab/salmon) >= 0.11 
 
 For Ikura to work out-of-the-box, all of these softwares should be directly callable, so add them to your environment path. *Alternatively*, you can edit manually the 'dependencies.txt' file to specify custom paths and integrate Ikura to your system. In case of any bad configuration, Ikura will warn you.
 
-Download and extract the [latest release of Ikura](https://github.com/juugii/ikura/releases/tag/v1.0.0), enter the directory and type:
+Download and extract the [latest release of Ikura](https://github.com/juugii/ikura/releases/tag/v1.1.0), enter the directory and type:
 
 ```bash
 $ make install
