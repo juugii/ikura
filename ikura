@@ -14,21 +14,24 @@ usage(){
 	echo ""
 	echo "Ikura ${VERSION}"
 	echo "Usage:"
+	echo ""
 	echo "Index: ./ikura --warmup	[-t|--transcripts] <transcripts.fa>
 			[-a|--annotation] <annotation.gtf>
 			[-i|--index] <ikuraIndex>
+
 			[-p|--processes] <coresNb> (optional, default is 10)
 
 	"	
-
-	echo "Quantif: ./ikura	[-q|--no-fastq-check] (optional)
-			[-l|--libtype] <v2|v3|vdj> (optional)
-			[-1|--read1] <read1>
+	echo ""
+	echo "Quantif: ./ikura	[-1|--read1] <read1>
 			[-2|--read2] <read2>
 			[-n|--expectedCells] <expectedCellNb>
 			[-o|--output] <samplePrefix>
-			[-i|--index] <ikuraIndexDir>
+			[-i|--index] <ikuraIndex>
+
 			[-t|--threads] <coresNb> (optional, default is 10)
+			[-l|--libtype] <v2|v3|vdj> (optional, autodetected by default)
+			[-q|--no-fastq-check] (optional)
 
 	NOTE: files should be specified as absolute paths.
 	Ikura creates an output directory where the command is executed.
@@ -40,7 +43,6 @@ usage(){
 
 
 if [ $# -eq 0 ]; then
-
 	usage
 fi
 
@@ -90,7 +92,6 @@ done
 
 if [ "${LIB}" = 'NONE' ]
 then
-
 	source ${SCRIPTDIR}/sources/libcheck
 	LIB=$(testlib ${READ1})
 fi
@@ -98,7 +99,7 @@ fi
 source ${SCRIPTDIR}/sources/libcheck
 echo ""
 echo "INFO: 10x ${LIB} chemistry has been autodetected." 
-echo "In case of any wrong autodetection, abort with Ctrl-C and force the library detection with --library|-l <v2|v3|vdj>."
+echo "You can force the library detection with option --library|-l <v2|v3|vdj>."
 echo ""
 BC=$(setbarcode ${LIB})
 MAXL=$(minlen ${LIB})
@@ -113,7 +114,6 @@ echo "job started on" $(date)
 
 if [ "${MODE}" = 'warmup' ]
 then
-
 	source ${SCRIPTDIR}/sources/warmup
 	warmup ${IKURAINDEX} ${TRANSC} ${ANNO} ${CORES}
 	echo "Index successfully built."
@@ -122,7 +122,6 @@ then
 
 elif [ "${MODE}" = 'quantif' ]
 then
-
 	# setup directories
 	if [ ! -d "$PREFIX" ]; then
 	        mkdir $PREFIX

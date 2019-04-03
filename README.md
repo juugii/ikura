@@ -1,8 +1,8 @@
 ## Ikura:
 
-A pipeline for primary analysis of single cell experiments: quality controls and trimming, demultiplexing, cell calling and transcript quantification. This version support experiments from 10x 3' libraries.
+A pipeline for primary analysis of single cell experiments: quality controls and trimming, demultiplexing, cell calling and transcript quantification. This version support experiments from 10x 3' (v2 & v3), 5' and vdj libraries.
 
-Ikura creates outputs reports and expression matrices in convenient formats. Particularly expression outputs are similar to cellranger v2, and integrate well with existing pipelines and popular downstream analysis tools (eg. Seurat).
+Ikura creates outputs reports and expression matrices in convenient formats. Particularly, expression outputs are similar to cellranger v2, and integrate well with existing pipelines and popular downstream analysis tools (eg. Seurat). An R object of the expression matrice (as sparse matrix) is also provided.
 
 Analyses can be performed on any laptop or desktop, and are typically achieved within 3-4 hours (3k-8k cells, with 4 Gb of RAM and 8 CPU cores), and  takes only 1 hour without any quality trimming.
 
@@ -27,19 +27,26 @@ In our datasets, Ikura shows improved sensitivity in transcript quantification, 
 ```bash
 $ ./ikura --help
 
-Ikura v1.0
-Index: 	./ikura --warmup
-		[-t|--transcripts] <transcripts.fa>
-		[-a|--annotation] <annotation.gtf>
-		[-i|--index] <ikuraIndex>
+Ikura v1.1
+Usage:
 
-Quantif:./ikura	[-q|--no-fastq-check] (optional)
-		[-1|--read1] <read1>
-		[-2|--read2] <read2>
-		[-n|--expectedCells] <expectedCellNb>
-		[-o|--output] <samplePrefix>
-		[-i|--index] <ikuraIndex>
-		[-t|--threads] <coresNb> (optional, default is 10)
+Index: ./ikura --warmup	[-t|--transcripts] <transcripts.fa>
+			[-a|--annotation] <annotation.gtf>
+			[-i|--index] <ikuraIndex>
+
+			[-p|--processes] <coresNb> (optional, default is 10)
+
+	
+
+Quantif: ./ikura	[-1|--read1] <read1>
+			[-2|--read2] <read2>
+			[-n|--expectedCells] <expectedCellNb>
+			[-o|--output] <samplePrefix>
+			[-i|--index] <ikuraIndex>
+
+			[-t|--threads] <coresNb> (optional, default is 10)
+			[-l|--libtype] <v2|v3|vdj> (optional, autodetected by default)
+			[-q|--no-fastq-check] (optional)
 
 	NOTE: files should be specified as absolute paths.
 	Ikura creates an output directory where the command is executed.
@@ -58,6 +65,7 @@ Then you can start the QC assessment and the transcript quantification with:
 $ ./ikura --read1 sample_R1.fastq.gz --read2 sample_R2.fastq.gz --expectedCells 6000 --output nameOfSample --index customNameOfTheIndex
 
 ```
+The 10x library type (3'v2, 3'v3, 5', vdj) is autodetected. 10x 5' experiments are detected as v3 chemistry.
 
 By default, Ikura will use 10 cores, which has been found to be the best CPU/memory trade-off. In the case of a smaller configuration, Ikura's resources can be limited (eg. with the option --threads 4).
 
