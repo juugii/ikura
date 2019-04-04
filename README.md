@@ -1,6 +1,6 @@
 ## Ikura:
 
-A pipeline for primary analysis of single cell experiments: quality controls and trimming, demultiplexing, cell calling and transcript quantification (Salmon flavor). This version support experiments from 10x 3' (v2 & v3), 5' and vdj libraries.
+A pipeline for primary analysis of single cell experiments: quality controls and trimming, demultiplexing, cell calling and transcript quantification (Salmon flavor). This version support experiments from 10x 3' (v2 & v3), 5' (v2) and vdj libraries (vdj is still experimental).
 
 Ikura creates outputs reports and expression matrices in convenient formats. Particularly, expression outputs are similar to cellranger v2, and integrate well with existing pipelines and popular downstream analysis tools (eg. Seurat). An R object of the expression matrice (as sparse matrix) is also provided.
 
@@ -65,7 +65,7 @@ Then you can start the QC assessment and the transcript quantification with:
 $ ./ikura --read1 sample_R1.fastq.gz --read2 sample_R2.fastq.gz --expectedCells 6000 --output nameOfSample --index customNameOfTheIndex
 
 ```
-The 10x library type (3'v2, 3'v3, 5', vdj) is autodetected. 10x 5' experiments are detected as v3 chemistry.
+The 10x library type (3'v2, 3'v3, 5' & vdj) is inferred from the R1 characteristics. You can also state the library type with the option "-l". Please note that as of April 2019, 10x 5' experiments should be detected as v2 chemistry only.
 
 By default, Ikura will use 10 cores, which has been found to be the best CPU/memory trade-off. In the case of a smaller configuration, Ikura's resources can be limited (eg. with the option --threads 4).
 

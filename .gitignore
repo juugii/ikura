@@ -5,4 +5,5 @@ comparison2.pdf
 pkg/*
 notesQualityPretrim.txt
 utilities.R
+explo_testikura.r
 .gitignore
