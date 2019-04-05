@@ -2,7 +2,7 @@
 
 A pipeline for primary analysis of single cell experiments: quality controls and trimming, demultiplexing, cell calling and transcript quantification (Salmon flavor). This version support experiments from 10x 3' (v2 & v3), 5' (v2) and vdj libraries (vdj is still experimental).
 
-Ikura creates outputs reports and expression matrices in convenient formats. Particularly, expression outputs are similar to cellranger v2, and integrate well with existing pipelines and popular downstream analysis tools (eg. Seurat). An R object of the expression matrice (as sparse matrix) is also provided.
+Ikura creates outputs reports and expression matrices in convenient formats. Particularly, expression outputs are similar to cellranger v2, and integrate well with existing pipelines and popular downstream analysis tools (eg. Seurat). An R object of the expression matrix (as sparse matrix) is also provided.
 
 Analyses can be performed on any laptop or desktop, and are typically achieved within 3-4 hours (3k-8k cells, with 4 Gb of RAM and 8 CPU cores), and  takes only 1 hour without any quality trimming.
 
@@ -96,7 +96,7 @@ First, manually install [salmon](https://github.com/COMBINE-lab/salmon) >= 0.11 
 
 For Ikura to work out-of-the-box, all of these softwares should be directly callable, so add them to your environment path. *Alternatively*, you can edit manually the 'dependencies.txt' file to specify custom paths and integrate Ikura to your system. In case of any bad configuration, Ikura will warn you.
 
-Download and extract the [latest release of Ikura](https://github.com/juugii/ikura/releases/tag/v1.1.0), enter the directory and type:
+Download and extract the [latest release of Ikura](https://github.com/juugii/ikura/releases), enter the directory and type:
 
 ```bash
 $ make install
