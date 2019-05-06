@@ -6,7 +6,7 @@ Ikura creates outputs reports and expression matrices in convenient formats. Par
 
 Analyses can be performed on any laptop or desktop, and are typically achieved within 3-4 hours (3k-8k cells, with 4 Gb of RAM and 8 CPU cores), and  takes only 1 hour without any quality trimming.
 
-To ensuire reproducibility with the article (under review), see the corresponding git branch.
+To ensuire reproducibility with the article (in press), see the corresponding git branch.
 
 
 ## Features
@@ -113,10 +113,13 @@ $ make install PREFIX=/path/to/your/local/folder
 You can then add the install folder in the path of your bashrc.
 
 
-## Citation
+## Citations
 
-Ikura's article is under reviewing.
-Ikura relies on external tools, please also cite:
+Ikura has been developped for the following work:
+
+Legoux, F.*, Gilet, J.*, Procopio, E., Echasserieau, K., Bernardeau, K. & Lantz, O (In Press). Molecular mechanisms of lineage decisions in metabolite-specific T cells. Nature Immunology.
+
+Ikura relies on external tools:
 
 [Salmon](https://github.com/COMBINE-lab/salmon): Patro, R., Duggal, G., Love, M. I., Irizarry, R. A., & Kingsford, C. (2017). Salmon provides fast and bias-aware quantification of transcript expression. Nature Methods.
 
