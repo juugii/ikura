@@ -4,7 +4,7 @@ A pipeline for primary analysis of single cell experiments: quality controls and
 
 Ikura creates outputs reports and expression matrices in convenient formats. Particularly, expression outputs are similar to cellranger v2, and integrate well with existing pipelines and popular downstream analysis tools (eg. Seurat). An R object of the expression matrix (as sparse matrix) is also provided.
 
-Analyses can be performed on any laptop or desktop, and are typically achieved within 3-4 hours (3k-8k cells, with 4 Gb of RAM and 8 CPU cores), and  takes only 1 hour without any quality trimming.
+Analyses can be performed on any laptop or desktop, and are typically achieved within 1 hour per 1 k cells (with 4 Gb of RAM and 8 CPU cores). Without quality trimming, it takes only 1 hour for a typical sample with 10 k cells.
 
 Ikura has been developped for the following work:
 
@@ -85,18 +85,18 @@ The expected cell number will help identifying the true cellular barcodes (the d
 
 A html report has been generated in the output folder. Details on the cell calling are inside the same named folder. You can now import the transcript quantification with Seurat (ie. Read10x("/path/to/folder/nameOfSample/outs")) or any other tools, or load the sparse matrix (.rds file).
 
-If work on T-cells or B-cells, you might be interested by Ikura's companion tool: [Tobiko](https://github.com/juugii/Tobiko).
+If working on T-cells or B-cells, you might be interested by Ikura's companion tool: [Tobiko](https://github.com/juugii/Tobiko).
 
 
 ## Prerequisites
 
 Ikura has been developed on Linux and tested on several 64-bits distribution (CentOS 7, Debian 9, Ubuntu 18.04 LTS), and should be compatible with MacOSX (Posix compliant).
-It has the following dependencies: python>=3.6.5, R>=3.5.0 (preferred, not a mandatory), salmon>=0.11, awk, umi_tools>=0.5.4; fastq QC and pre-cleaning require fastqc>=0.11.7, multiqc>=1.5 & cutadapt>=1.18.
+It has the following dependencies: python>=3.6.5, R>=3.5.0 (preferred, not a mandatory), salmon (>=0.11 & <=0.13.1, awk, umi_tools>=0.5.4; fastq QC and pre-cleaning require fastqc>=0.11.7, multiqc>=1.5 & cutadapt>=1.18.
 
 
 ## Installing
 
-First, manually install [salmon](https://github.com/COMBINE-lab/salmon) >= 0.11 and [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc) >= 0.11.7 on your system. You will also need to have R (>=3.5.0 preferred) and python>=3.6.5 installed.
+First, manually install [salmon](https://github.com/COMBINE-lab/salmon/releases/tag/v0.13.1) >= 0.11 and [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc) >= 0.11.7 on your system. You will also need to have R (>=3.5.0 preferred) and python>=3.6.5 installed.
 
 For Ikura to work out-of-the-box, all of these softwares should be directly callable, so add them to your environment path. *Alternatively*, you can edit manually the 'dependencies.txt' file to specify custom paths and integrate Ikura to your system. In case of any bad configuration, Ikura will warn you.
 
@@ -107,7 +107,7 @@ $ make install
 
 ```
 
-You will need administrative rights for this. You can also install Ikura locally with:
+You will need administrative rights for this. Alternatively, you can install Ikura locally without admin rights with:
 
 ```bash
 $ make install PREFIX=/path/to/your/local/folder
